@@ -1,14 +1,38 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { CuentasComponent } from './components/cuentas/cuentas.component';
+import {AgricultoresComponent} from "./components/agricultores/agricultores.component";
+import {TransportistasComponent} from "./components/transportista/transportistas.component";
+import {TransporteComponent} from "./components/transportes/transporte.component";
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuard], // Aquí queda el guard listo
+    canActivate: [authGuard],
+    component: DashboardComponent,
     children: [
-      /* Aquí irás agregando tus rutas cuando tengas los componentes, ejemplo:
-         { path: 'dashboard', component: DashboardComponent },
-      */
+      {
+        path: 'cuentas',
+        component: CuentasComponent
+      },
+      {
+        path: 'agricultores',
+        component: AgricultoresComponent
+      },
+      {
+        path: 'transportistas',
+        component: TransportistasComponent
+      },
+      {
+        path: 'transporte',
+        component: TransporteComponent
+      },
+      {
+        path: '',
+        redirectTo: 'cuentas',
+        pathMatch: 'full'
+      }
     ]
   },
   {

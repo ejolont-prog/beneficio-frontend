@@ -1,0 +1,61 @@
+.drawer-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+}
+
+.logo-section {
+  padding: 24px;
+  text-align: center;
+}
+
+.coffee-logo {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #3f51b5; /* Azul Indigo del tema Material */
+  margin-bottom: 8px;
+}
+
+.logo-section h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.logout-wrapper {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.logout-btn {
+  width: 100%;
+  color: #f44336;
+}
+
+.header {
+  padding: 20px 40px;
+  background-color: #fdf0e7; /* Fondo crema para consistencia */
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #2b170e;
+}
+
+.active-link {
+  background-color: rgba(63, 81, 181, 0.1);
+  color: #3f51b5 !important;
+}
+
+.content-layout {
+  padding: 20px;
+}

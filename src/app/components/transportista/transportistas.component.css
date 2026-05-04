@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.text-primary {
+  color: #2c3e50 !important; /* Color oscuro profesional */
+  font-weight: 700;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+code {
+  color: #e83e8c;
+  background-color: #f1f1f1;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Alineación específica para la columna de acciones */
+.mat-column-acciones {
+  width: 120px;
+}
+
+/* Efecto hover sobre las filas de la tabla */
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  transition: background-color 0.2s ease;
+}

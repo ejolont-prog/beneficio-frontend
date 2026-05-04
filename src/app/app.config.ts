@@ -13,6 +13,6 @@ export const appConfig: ApplicationConfig = {
     // 3. Habilitar HttpClient con tu interceptor
     provideHttpClient(
       withInterceptors([authInterceptor])
-    )
+    ), provideAnimationsAsync()
   ]
 };

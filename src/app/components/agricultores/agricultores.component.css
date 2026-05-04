@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.text-primary {
+  color: #2c3e50 !important;
+  font-weight: 700;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Sombra suave para la tabla */
+.mat-column-acciones {
+  width: 120px;
+}

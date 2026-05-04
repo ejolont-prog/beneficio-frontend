@@ -1,0 +1,55 @@
+<mat-drawer-container class="drawer-container" autosize>
+  <mat-drawer #drawer class="sidenav" mode="side" opened="true">
+    <div class="logo-section">
+      <!-- Icono representativo de Beneficio/Industria -->
+      <mat-icon class="coffee-logo">factory</mat-icon>
+      <h2>Beneficio</h2>
+    </div>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/cuentas" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>account_balance</mat-icon>
+        <span matListItemTitle>Cuentas</span>
+      </a>
+      <a mat-list-item routerLink="/transporte" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>local_shipping</mat-icon>
+        <span matListItemTitle>Transporte</span>
+      </a>
+      <a mat-list-item routerLink="/transportistas" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>badge</mat-icon> <!-- Icono de carnet/identificación -->
+        <span matListItemTitle>Transportistas</span>
+      </a>
+
+      <!-- Nuevo enlace para Agricultores -->
+      <a mat-list-item routerLink="/agricultores" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>groups</mat-icon>
+        <span matListItemTitle>Agricultores</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="logout-wrapper">
+      <button mat-button class="logout-btn" (click)="cerrarSesion()">
+        <mat-icon>logout</mat-icon> Log out
+      </button>
+    </div>
+  </mat-drawer>
+
+  <mat-drawer-content class="app-container">
+    <header class="header">
+      <div class="top-row">
+        <button mat-icon-button (click)="drawer.toggle()" class="menu-toggle">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="brand-text">
+          <h1>Panel de Administración</h1>
+          <p>Gestión del sistema Peso Cabal - Módulo Beneficio</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="content-layout">
+      <!-- Aquí es donde aparecerá el componente de Cuentas -->
+      <router-outlet></router-outlet>
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>

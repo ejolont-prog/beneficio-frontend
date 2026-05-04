@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  border-top: none;
+  padding: 1rem;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 1rem;
+  color: #495057;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.6rem;
+}
+
+.text-primary {
+  color: #2c3e50 !important;
+  font-weight: 700;
+}
