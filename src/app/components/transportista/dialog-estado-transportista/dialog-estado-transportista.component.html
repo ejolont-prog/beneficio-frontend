@@ -1,0 +1,124 @@
+<div class="modal-container">
+
+  <h2 mat-dialog-title class="dialog-header">
+    <mat-icon>person</mat-icon>
+    Actualizar Estado del Transportista
+  </h2>
+
+  <mat-dialog-content>
+
+    <div class="form-grid">
+
+      <!-- CUI -->
+      <div class="field-item">
+
+        <label class="custom-label">
+          CUI
+        </label>
+
+        <mat-form-field appearance="outline" class="w-100">
+
+          <input
+            matInput
+            [(ngModel)]="data.cui"
+            readonly
+            class="input-readonly"
+            name="cui">
+
+          <mat-icon matPrefix>
+            badge
+          </mat-icon>
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- ESTADO -->
+      <div class="field-item">
+
+        <label class="custom-label">
+          Estado
+        </label>
+
+        <mat-form-field appearance="outline" class="w-100">
+
+          <mat-select
+            [(ngModel)]="data.estado"
+            name="estado"
+            required>
+
+            <mat-option
+              *ngFor="let est of listaEstados"
+              [value]="est.id">
+
+              {{est.nombre}}
+
+            </mat-option>
+
+          </mat-select>
+
+          <mat-icon matPrefix>
+            settings
+          </mat-icon>
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- OBSERVACIONES -->
+      <div class="field-item full-width">
+
+        <label class="custom-label">
+          Observaciones
+        </label>
+
+        <mat-form-field appearance="outline" class="w-100">
+
+          <textarea
+            matInput
+            rows="5"
+            [(ngModel)]="data.observaciones"
+            name="observaciones"
+            required
+            placeholder="Describe el motivo del cambio...">
+
+          </textarea>
+
+          <mat-icon matPrefix>
+            rate_review
+          </mat-icon>
+
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+
+    <button
+      mat-button
+      class="btn-cancelar"
+      (click)="cancelar()">
+
+      <mat-icon>close</mat-icon>
+      Cancelar
+
+    </button>
+
+    <button
+      mat-raised-button
+      class="btn-actualizar"
+      [disabled]="!formValido()"
+      (click)="actualizar()">
+
+      <mat-icon>save</mat-icon>
+      Actualizar
+
+    </button>
+
+  </mat-dialog-actions>
+
+</div>
