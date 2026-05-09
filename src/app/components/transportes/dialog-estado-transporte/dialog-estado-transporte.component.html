@@ -1,0 +1,56 @@
+<div class="modal-container">
+  <h2 mat-dialog-title class="dialog-header">
+    <mat-icon>edit_note</mat-icon>
+    Actualizar Información de Unidad
+  </h2>
+
+  <mat-dialog-content>
+    <div class="form-grid">
+
+      <div class="field-item">
+        <label class="custom-label">Número de Placa</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [(ngModel)]="data.placa" readonly name="placa" class="input-readonly">
+          <mat-icon matPrefix style="color: var(--melon)">directions_car</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="field-item">
+        <label class="custom-label">Estado Operativo</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select [(ngModel)]="data.estado" name="estado" required>
+            <mat-option *ngIf="cargandoEstados" disabled>Cargando catálogo...</mat-option>
+            <mat-option *ngFor="let est of listaEstados" [value]="est.id">
+              {{est.nombre}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix style="color: var(--melon)">settings_suggest</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="field-item full-width">
+        <label class="custom-label">Comentarios y Observaciones</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea matInput rows="5" [(ngModel)]="data.observaciones"
+                    name="observaciones" required
+                    placeholder="Escriba los detalles del cambio aquí..."></textarea>
+          <mat-icon matPrefix style="color: var(--melon)">rate_review</mat-icon>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button class="btn-cancelar" (click)="cancelar()">
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+    <button mat-raised-button
+            class="btn-actualizar"
+            [disabled]="!formValido()"
+            (click)="actualizar()">
+      <mat-icon>save</mat-icon>
+      Actualizar
+    </button>
+  </mat-dialog-actions>
+</div>

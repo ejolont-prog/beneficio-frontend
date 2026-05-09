@@ -1,49 +1,120 @@
 :host {
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  --neon-glow: #ff9f69;
   display: block;
-  background-color: #f8f9fa;
+  background-color: #fcf8f5;
   min-height: 100vh;
 }
 
-.text-primary {
-  color: #2c3e50 !important;
-  font-weight: 700;
+.page-container {
+  padding: 30px;
 }
 
-/* Estilo que simula una placa de vehículo */
+/* HEADER */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Reducido un poco */
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* CAMBIO: Título más pequeño */
+.title-group h1 {
+  color: var(--coffee-dark);
+  font-weight: 800;
+  margin: 0;
+  font-size: 1.5rem; /* Antes era 2rem */
+}
+
+.title-group p {
+  color: var(--melon-text);
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.9rem; /* Un poco más pequeño también */
+}
+
+/* CAMBIO: Espacio de filtros más ancho y con margen inferior */
+.filter-card {
+  background-color: white !important;
+  border-radius: 20px !important;
+  border: none !important;
+  margin-bottom: 30px !important; /* Separación entre filtros y tabla */
+  box-shadow: 0 4px 15px rgba(43, 23, 14, 0.05) !important;
+}
+
+.filter-container {
+  padding: 20px !important; /* Más espacio interno para que no se sofoquen los inputs */
+  display: flex;
+  gap: 20px; /* Más separación entre los inputs */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* BOTONES */
+.add-btn {
+  background-color: var(--accent-gold) !important;
+  color: var(--coffee-dark) !important;
+  border-radius: 12px !important;
+  font-weight: bold !important;
+  border: 2px solid var(--neon-glow);
+  box-shadow: 0 4px 8px rgba(255, 159, 105, 0.3);
+  transition: all .3s ease;
+  height: 45px; /* Altura fija para consistencia */
+}
+
+.back-btn {
+  color: var(--coffee-dark) !important;
+  border-color: var(--melon-text) !important;
+  height: 45px;
+}
+
+/* CARD TABLA */
+.table-card {
+  background-color: white !important;
+  border-radius: 20px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(43, 23, 14, 0.05) !important;
+  border: none !important;
+}
+
+/* ... Resto de estilos de tabla se mantienen igual ... */
+
 .placa-label {
   background-color: #ffffff;
-  border: 2px solid #333;
-  padding: 2px 8px;
-  border-radius: 4px;
+  border: 2px solid var(--coffee-dark);
+  padding: 4px 10px;
+  border-radius: 6px;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 2px 2px 0px var(--accent-gold);
 }
 
-.badge {
-  font-weight: 500;
-  padding: 0.6em 1em;
-  border-radius: 50px; /* Bordes redondeados tipo píldora */
-  font-size: 0.75rem;
-  text-transform: uppercase;
+.badge-active {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
-.loading-icon {
-  animation: spin 2s linear infinite;
-  font-size: 2rem;
-  width: 2rem;
-  height: 2rem;
-  color: #2c3e50;
+.badge-inactive {
+  background-color: #fce8e6;
+  color: #d93025;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
-
-.mat-column-idTransporte { width: 60px; }
-.mat-column-placa { width: 140px; }
-.mat-column-acciones { width: 120px; }
-
-.mat-mdc-row:hover {
-  background-color: #f1f3f5;
+.detail-btn {
+  background-color: var(--coffee-dark) !important;
+  color: white !important;
+  border-radius: 10px !important;
+  font-size: 0.75rem !important;
 }
