@@ -1,0 +1,46 @@
+<div class="qr-screen">
+  <header class="qr-header">
+    <button mat-icon-button routerLink="/dashboard" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Escaneo de Documentos QR</h1>
+  </header>
+
+  <div class="scanner-container">
+    <!-- El escáner de la librería -->
+    <zxing-scanner
+      *ngIf="scannerEnabled"
+      (scanSuccess)="onCodeResult($event)"
+      [autofocusEnabled]="true"
+      [previewFitMode]="'cover'">
+    </zxing-scanner>
+
+    <!-- Marco visual sobre la cámara -->
+    <div class="scanner-overlay">
+      <div class="target-box">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+      </div>
+    </div>
+  </div>
+
+  <mat-card class="result-card" *ngIf="qrResultString">
+    <mat-card-content>
+      <div class="result-header">
+        <mat-icon>check_circle</mat-icon>
+        <span>Lectura Exitosa</span>
+      </div>
+      <p class="qr-data">{{ qrResultString }}</p>
+      <button mat-stroked-button color="primary" (click)="limpiarLectura()">
+        <mat-icon>refresh</mat-icon> Reintentar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="hint" *ngIf="!qrResultString">
+    <mat-icon>center_focus_weak</mat-icon>
+    <p>Coloque el código QR dentro del recuadro</p>
+  </div>
+</div>

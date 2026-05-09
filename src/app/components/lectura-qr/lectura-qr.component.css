@@ -1,0 +1,128 @@
+.qr-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #fafafa;
+  min-height: 90vh;
+}
+
+.qr-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+.qr-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.back-btn {
+  margin-right: 10px;
+}
+
+zxing-scanner {
+  width: 100%;
+  height: 100%;
+  /* Esto obliga al video a cubrir todo el contenedor sin dejar bordes negros */
+  object-fit: cover;
+}
+
+/* También asegúrate de que el contenedor tenga fondo negro por si tarda en cargar */
+.scanner-container {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  aspect-ratio: 1 / 1; /* Esto mantiene el formato cuadrado */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  background-color: #000;
+}
+
+/* Capa superior con el diseño del marco */
+.scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.target-box {
+  position: relative;
+  width: 65%;
+  height: 65%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Esquinas blancas brillantes */
+.corner {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 4px solid #fff;
+}
+
+.top-left { top: -2px; left: -2px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+.top-right { top: -2px; right: -2px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
+.bottom-left { bottom: -2px; left: -2px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
+.bottom-right { bottom: -2px; right: -2px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+
+/* Tarjeta de resultado */
+.result-card {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #4caf50;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.qr-data {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  word-break: break-all;
+  margin-bottom: 15px;
+}
+
+.hint {
+  margin-top: 25px;
+  text-align: center;
+  color: #888;
+}
+
+.hint mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+::ng-deep zxing-scanner video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  background: #000;
+}
