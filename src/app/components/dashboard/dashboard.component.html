@@ -25,7 +25,14 @@
         <mat-icon matListItemIcon>groups</mat-icon>
         <span matListItemTitle>Agricultores</span>
       </a>
+
+      <a mat-list-item routerLink="/lectura-qr" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>qr_code_scanner</mat-icon>
+        <span matListItemTitle>Lectura QR</span>
+      </a>
     </mat-nav-list>
+
+
 
     <div class="logout-wrapper">
       <button mat-button class="logout-btn" (click)="cerrarSesion()">
