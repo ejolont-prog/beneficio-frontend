@@ -1,0 +1,42 @@
+<div class="modal-container">
+  <h2 mat-dialog-title class="dialog-header">
+    <mat-icon style="color: var(--gold)">person_search</mat-icon>
+    {{data.nit}} - {{data.nombre}}
+  </h2>
+
+  <mat-dialog-content>
+    <div class="form-grid">
+      <div>
+        <label class="custom-label">Cuentas Registradas</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [value]="conteos.cuentas" readonly class="input-readonly">
+          <mat-icon matSuffix>account_balance</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <label class="custom-label">Cantidad de Transportes</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [value]="conteos.transportes" readonly class="input-readonly">
+          <mat-icon matSuffix>local_shipping</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="full-width">
+        <label class="custom-label">Transportistas Asociados</label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput [value]="conteos.transportistas" readonly class="input-readonly">
+          <mat-icon matSuffix>badge</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="cargando" class="full-width text-center">
+        <small style="color: var(--melon)">Consultando registros...</small>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="cerrar()" class="btn-cancelar">Cerrar</button>
+  </mat-dialog-actions>
+</div>
