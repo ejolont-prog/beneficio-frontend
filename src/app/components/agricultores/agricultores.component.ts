@@ -1,19 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
-// Angular Material Imports
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { AgricultoresService } from '../../services/agricultores.service';
+import { HttpClientModule } from '@angular/common/http';
+// --- NUEVOS IMPORTS ---
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogDetalleAgricultorComponent } from './dialog-detalle-agricultor/dialog-detalle-agricultor.component';
 
-interface Agricultor {
-  idUsuario: number;
-  nombreCompleto: string;
-  dpi: string;
-  ubicacion: string;
-  estado: boolean;
+export interface Agricultor {
+  nit: string;
+  nombre: string;
+  observaciones?: string;
+  fechaCreacion: Date;
 }
 
 @Component({
@@ -21,47 +24,70 @@ interface Agricultor {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
     MatTableModule,
-    MatButtonModule,
+    MatCardModule,
     MatIconModule,
-    MatCardModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    HttpClientModule,
+    MatDialogModule // <--- Importante añadirlo aquí también
   ],
   templateUrl: './agricultores.component.html',
   styleUrls: ['./agricultores.component.css']
 })
 export class AgricultoresComponent implements OnInit {
 
-  displayedColumns: string[] = ['idUsuario', 'nombreCompleto', 'dpi', 'ubicacion', 'estado', 'acciones'];
-  public agricultores: Agricultor[] = [];
-  public cargando: boolean = true;
+  displayedColumns: string[] = ['nit', 'nombre', 'observaciones', 'fechaCreacion', 'acciones'];
+  dataSource = new MatTableDataSource<Agricultor>([]);
+  cargando: boolean = false;
 
-  constructor() { }
+  constructor(
+    private agricultoresService: AgricultoresService,
+    private dialog: MatDialog // Ahora MatDialog será reconocido
+  ) { }
 
   ngOnInit(): void {
-    this.cargarAgricultores();
+    this.obtenerAgricultores();
   }
 
-  cargarAgricultores(): void {
+  obtenerAgricultores() {
     this.cargando = true;
-    // Simulación de carga (Sustituir por tu servicio de Spring Boot)
-    setTimeout(() => {
-      this.agricultores = [
-        { idUsuario: 101, nombreCompleto: 'Juan Pérez García', dpi: '2541 45874 0101', ubicacion: 'Aldea El Socorro', estado: true },
-        { idUsuario: 102, nombreCompleto: 'María López Hernández', dpi: '1890 32145 0501', ubicacion: 'Finca La Esperanza', estado: true },
-        { idUsuario: 103, nombreCompleto: 'Carlos Ruíz Ortiz', dpi: '3005 11223 0101', ubicacion: 'Sector Los Planes', estado: false }
-      ];
-      this.cargando = false;
-    }, 800);
+    this.agricultoresService.getAgricultores().subscribe({
+      next: (datos: Agricultor[]) => {
+        this.dataSource.data = datos;
+        this.cargando = false;
+      },
+      error: (error) => {
+        console.error('Error al obtener agricultores:', error);
+        this.cargando = false;
+      }
+    });
   }
 
-  editarAgricultor(agricultor: Agricultor): void {
-    console.log('Editando agricultor:', agricultor.idUsuario);
-  }
-
-  eliminarAgricultor(id: number): void {
-    if (confirm('¿Desea eliminar este registro de agricultor?')) {
-      this.agricultores = this.agricultores.filter(a => a.idUsuario !== id);
+  soloNumerosYGuion(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    const charStr = String.fromCharCode(charCode);
+    if (!/^[0-9-]+$/.test(charStr)) {
+      event.preventDefault();
     }
+  }
+
+  aplicarFiltroNit(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  limpiarFiltros(input: HTMLInputElement) {
+    input.value = '';
+    this.dataSource.filter = '';
+  }
+
+  verDetalle(agricultor: Agricultor) {
+    this.dialog.open(DialogDetalleAgricultorComponent, {
+      width: '600px',
+      data: agricultor,
+      autoFocus: false
+    });
   }
 }

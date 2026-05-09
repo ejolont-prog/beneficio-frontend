@@ -5,116 +5,174 @@
   --melon-text: #e59a7d;
   --neon-glow: #ff9f69;
   display: block;
-  background-color: #fcf8f5;
+  background-color: #fafafa; /* Fondo sutil para que resalten las cards */
   min-height: 100vh;
 }
 
 .page-container {
   padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* HEADER */
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px; /* Reducido un poco */
-  flex-wrap: wrap;
-  gap: 15px;
-}
 
-/* CAMBIO: Título más pequeño */
-.title-group h1 {
-  color: var(--coffee-dark);
-  font-weight: 800;
-  margin: 0;
-  font-size: 1.5rem; /* Antes era 2rem */
-}
-
-.title-group p {
-  color: var(--melon-text);
-  margin: 0;
-  font-weight: 500;
-  font-size: 0.9rem; /* Un poco más pequeño también */
-}
-
-/* CAMBIO: Espacio de filtros más ancho y con margen inferior */
+/* FILTROS */
 .filter-card {
   background-color: white !important;
   border-radius: 20px !important;
-  border: none !important;
-  margin-bottom: 30px !important; /* Separación entre filtros y tabla */
-  box-shadow: 0 4px 15px rgba(43, 23, 14, 0.05) !important;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+  border: 1px solid rgba(229, 154, 125, 0.1);
 }
 
 .filter-container {
-  padding: 20px !important; /* Más espacio interno para que no se sofoquen los inputs */
   display: flex;
-  gap: 20px; /* Más separación entre los inputs */
+  gap: 20px;
   align-items: center;
   flex-wrap: wrap;
 }
 
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* Personalización de Angular Material Inputs */
+::ng-deep .mat-mdc-form-field-focus-indicator {
+  color: var(--accent-gold) !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: white !important;
+}
+
 /* BOTONES */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
 .add-btn {
   background-color: var(--accent-gold) !important;
   color: var(--coffee-dark) !important;
   border-radius: 12px !important;
+  padding: 0 20px !important;
   font-weight: bold !important;
-  border: 2px solid var(--neon-glow);
-  box-shadow: 0 4px 8px rgba(255, 159, 105, 0.3);
-  transition: all .3s ease;
-  height: 45px; /* Altura fija para consistencia */
+  border: 2px solid var(--neon-glow) !important;
+  box-shadow: 0 0 10px var(--neon-glow);
+  transition: all .3s ease !important;
+}
+
+.add-btn:hover {
+  box-shadow: 0 0 20px var(--neon-glow);
+  transform: translateY(-2px);
 }
 
 .back-btn {
-  color: var(--coffee-dark) !important;
+  color: var(--melon-text) !important;
+  font-weight: 600 !important;
   border-color: var(--melon-text) !important;
-  height: 45px;
 }
 
-/* CARD TABLA */
+/* TABLA Y CARDS */
 .table-card {
   background-color: white !important;
-  border-radius: 20px !important;
+  border-radius: 25px !important;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(43, 23, 14, 0.05) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
   border: none !important;
 }
 
-/* ... Resto de estilos de tabla se mantienen igual ... */
-
-.placa-label {
-  background-color: #ffffff;
-  border: 2px solid var(--coffee-dark);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-family: 'Courier New', Courier, monospace;
-  box-shadow: 2px 2px 0px var(--accent-gold);
+.table-responsive {
+  overflow-x: auto;
 }
 
-.badge-active {
-  background-color: #e6f4ea;
-  color: #1e7e34;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.7rem;
-  font-weight: 800;
+/* ESTILOS DE LA TABLA */
+.mat-mdc-table {
+  background: transparent !important;
+  width: 100%;
 }
 
-.badge-inactive {
-  background-color: #fce8e6;
-  color: #d93025;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.7rem;
-  font-weight: 800;
+.mat-mdc-header-cell {
+  color: var(--melon-text) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1.2px;
+  padding: 20px !important;
+  border-bottom: 2px solid var(--melon-bg) !important;
 }
 
-.detail-btn {
+.mat-mdc-cell {
+  color: var(--coffee-dark) !important;
+  padding: 18px !important;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--melon-bg) !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(253, 230, 216, 0.2) !important;
+}
+
+/* BOTÓN DE ACCIÓN EN TABLA */
+.mat-mdc-button.mat-primary, .mat-mdc-raised-button.mat-primary {
   background-color: var(--coffee-dark) !important;
   color: white !important;
   border-radius: 10px !important;
-  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+}
+
+/* LOADING STATE */
+.loading-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: var(--accent-gold);
+  animation: spin 2s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.p-0 { padding: 0 !important; }
+.p-5 { padding: 3rem !important; }
+.text-center { text-align: center; }
+
+/* HEADER MEJORADO (Estilo Transportistas) */
+.section-header {
+  margin-bottom: 35px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--melon-bg); /* Línea sutil característica del modal */
+}
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-with-icon mat-icon {
+  color: var(--accent-gold);
+  font-size: 32px;  /* Un poco más grande por ser página */
+  width: 32px;
+  height: 32px;
+}
+
+.title-group h1 {
+  color: var(--coffee-dark);
+  font-weight: 800;
+  margin: 0;
+  font-size: 2.2rem; /* Tamaño prominente */
+  letter-spacing: -1px;
+}
+
+.title-group p {
+  color: var(--melon-text);
+  margin: 5px 0 0 47px; /* Alineado después del icono (32px icono + 15px gap) */
+  font-size: 1rem;
+  font-weight: 500;
 }
