@@ -1,68 +1,63 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
-// Angular Material Imports
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
-
-interface Cuenta {
-  idUsuario: number; // Basado en tu estructura de base de datos
-  nombreCuenta: string;
-  tipo: string;
-  estado: boolean;
-}
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { CuentasService, CuentaDetalle } from '../../services/cuentas.service';
 
 @Component({
   selector: 'app-cuentas',
-  standalone: true,
+  standalone: true, // Asumiendo que usas Standalone por los errores
   imports: [
     CommonModule,
-    RouterModule,
     MatTableModule,
-    MatButtonModule,
+    MatCardModule,
     MatIconModule,
-    MatCardModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './cuentas.component.html',
   styleUrls: ['./cuentas.component.css']
 })
 export class CuentasComponent implements OnInit {
 
-  // Definimos las columnas que se mostrarán en la mat-table
-  displayedColumns: string[] = ['idUsuario', 'nombreCuenta', 'tipo', 'estado', 'acciones'];
+  // Variables necesarias para la tabla
+  dataSource = new MatTableDataSource<CuentaDetalle>([]);
+  columnas: string[] = ['noCuenta', 'agricultor', 'pesoTotal', 'parcialidades', 'fecha', 'estado', 'acciones'];
+  cargando: boolean = true;
 
-  public cuentas: Cuenta[] = [];
-  public cargando: boolean = true;
-
-  constructor() { }
+  constructor(private cuentasService: CuentasService) { }
 
   ngOnInit(): void {
-    this.cargarCuentas();
+    this.obtenerCuentas();
   }
 
-  cargarCuentas(): void {
+  obtenerCuentas(): void {
     this.cargando = true;
-    // Simulación de carga (Sustituir por tu Servicio de Spring Boot)
-    setTimeout(() => {
-      this.cuentas = [
-        { idUsuario: 1, nombreCuenta: 'Caja Chica Central', tipo: 'Efectivo', estado: true },
-        { idUsuario: 2, nombreCuenta: 'Banco Industrial - Operaciones', tipo: 'Banco', estado: true },
-        { idUsuario: 3, nombreCuenta: 'Cuenta de Gastos Varios', tipo: 'Gasto', estado: false }
-      ];
-      this.cargando = false;
-    }, 800);
+    this.cuentasService.getCuentas().subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.cargando = false;
+      }
+    });
   }
 
-  editarCuenta(cuenta: Cuenta): void {
-    console.log('Editando:', cuenta.idUsuario);
+  // Métodos para los filtros que pide el HTML
+  aplicarFiltro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  eliminarCuenta(id: number): void {
-    if (confirm('¿Desea eliminar esta cuenta?')) {
-      this.cuentas = this.cuentas.filter(c => c.idUsuario !== id);
-    }
+  limpiarFiltro(input: HTMLInputElement) {
+    input.value = '';
+    this.dataSource.filter = '';
   }
 }
