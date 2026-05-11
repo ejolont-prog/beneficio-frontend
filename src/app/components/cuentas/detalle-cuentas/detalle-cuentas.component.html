@@ -1,0 +1,70 @@
+<div class="page-container">
+  <header class="section-header">
+    <div class="title-group">
+      <h1>Detalle de Cuenta</h1>
+      <p>Listado de envíos para la cuenta: <strong>{{ noCuenta }}</strong></p>
+    </div>
+    <div class="action-buttons">
+      <button mat-button class="back-btn" routerLink="/cuentas">
+        <mat-icon>arrow_back</mat-icon> Regresar a Cuentas
+      </button>
+    </div>
+  </header>
+
+  <div class="table-card">
+    <div *ngIf="cargando" class="text-center p-5">
+      <mat-icon class="loading-icon">sync</mat-icon>
+      <p>Buscando registros en beneficio.detallecuenta...</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!cargando">
+      <table class="custom-table">
+        <thead>
+        <tr>
+          <th>No. Envío</th>
+          <th>Placa</th>
+          <th>CUI Piloto</th>
+          <th>Peso Estimado</th>
+          <th>Peso Recibido</th>
+          <th>Fecha Registro</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let envio of listadoEnvios">
+          <td class="fw-bold">{{ envio.noparcialidad }}</td>
+          <td><span class="badge-placa">{{ envio.placa }}</span></td>
+          <td>{{ envio.cuitransportista }}</td>
+          <td class="fw-bold text-primary">{{ envio.pesoestimado | number }}</td>
+          <td class="fw-bold" [ngClass]="envio.pesorecibido ? 'text-success' : 'text-muted'">
+            {{ envio.pesorecibido ? (envio.pesorecibido | number) : 'Pendiente' }}
+          </td>
+          <td>{{ envio.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+              <span [class]="envio.estado === 1 ? 'status-badge-pending' : 'status-badge-active'">
+                {{ envio.estado === 1 ? 'En Camino' : 'Recibido' }}
+              </span>
+          </td>
+          <td>
+            <button class="btn detail-btn" *ngIf="!envio.pesorecibido">
+              Pesar
+            </button>
+            <mat-icon *ngIf="envio.pesorecibido" color="primary">check_circle</mat-icon>
+          </td>
+        </tr>
+
+        <tr *ngIf="listadoEnvios.length === 0">
+          <td colspan="8" class="empty-row-cell">
+            <div class="empty-state-wrapper">
+              <mat-icon>local_shipping</mat-icon>
+              <h3 class="empty-title">Sin envíos registrados</h3>
+              <p>No se han encontrado parcialidades para esta cuenta.</p>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

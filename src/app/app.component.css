@@ -1,0 +1,49 @@
+:host {
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  display: block;
+  background-color: #fafafa;
+  min-height: 100vh;
+
+  /* ESTO ES LA CLAVE: Si el padre lo centra, esto lo expande */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+  /* Usamos padding para que el contenido no pegue al borde físico del monitor */
+  padding: 20px 40px;
+  width: 100%;
+  max-width: 100%; /* Eliminamos cualquier límite de pixeles */
+  box-sizing: border-box;
+}
+
+/* Ajuste del Header para que ocupe todo el espacio */
+.section-header {
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--melon-bg);
+  width: 100%;
+}
+
+/* Ajuste de las tarjetas para que no se limiten */
+.filter-card, .table-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Forzar que la tabla interna de Angular Material ocupe el 100% */
+.mat-mdc-table {
+  width: 100% !important;
+}
