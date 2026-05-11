@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router'; // 👈 Agregar esto
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,9 +11,10 @@ import { CuentasService, CuentaDetalle } from '../../services/cuentas.service';
 
 @Component({
   selector: 'app-cuentas',
-  standalone: true, // Asumiendo que usas Standalone por los errores
+  standalone: true,
   imports: [
     CommonModule,
+    RouterLink, // 👈 Agregar esto
     MatTableModule,
     MatCardModule,
     MatIconModule,
@@ -60,4 +62,28 @@ export class CuentasComponent implements OnInit {
     input.value = '';
     this.dataSource.filter = '';
   }
+
+
+  // Define estas variables en tu clase
+  mostrarDetalle = false;
+  cuentaSeleccionada: string = '';
+  parcialidades: any[] = [];
+
+// Función para el botón "Ver Detalle"
+  verDetalle(noCuenta: string) {
+    this.cuentaSeleccionada = noCuenta;
+    this.cuentasService.getDetallesParcialidad(noCuenta).subscribe({
+      next: (data) => {
+        this.parcialidades = data;
+        this.mostrarDetalle = true;
+      },
+      error: (err) => console.error('Error al cargar detalles', err)
+    });
+  }
+
+  regresarAListado() {
+    this.mostrarDetalle = false;
+    this.parcialidades = [];
+  }
+
 }

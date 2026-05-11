@@ -5,7 +5,8 @@ import { CuentasComponent } from './components/cuentas/cuentas.component';
 import {AgricultoresComponent} from "./components/agricultores/agricultores.component";
 import {TransportistasComponent} from "./components/transportista/transportistas.component";
 import {TransporteComponent} from "./components/transportes/transporte.component";
-import { LecturaQrComponent } from './components/lectura-qr/lectura-qr.component'; // Verifica que la ruta del archivo sea correcta
+import { LecturaQrComponent } from './components/lectura-qr/lectura-qr.component';
+import {DetalleCuentasComponent} from "./components/cuentas/detalle-cuentas/detalle-cuentas.component"; // Verifica que la ruta del archivo sea correcta
 
 export const routes: Routes = [
   {
@@ -33,6 +34,8 @@ export const routes: Routes = [
         path: 'transporte',
         component: TransporteComponent
       },
+      { path: 'cuentas', component: CuentasComponent },
+      { path: 'detalle-cuenta/:noCuenta', component: DetalleCuentasComponent },
       {
         path: '',
         redirectTo: 'cuentas',
