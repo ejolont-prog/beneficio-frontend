@@ -32,7 +32,7 @@ import { MatMenuModule } from '@angular/material/menu'; // 👈 ESTA FALTA
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatMenuModule, 
+    MatMenuModule,
   ],
   templateUrl: './cuentas.component.html',
   styleUrls: ['./cuentas.component.css']
