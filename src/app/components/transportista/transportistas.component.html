@@ -6,12 +6,12 @@
 
   <div class="filters-container">
     <mat-form-field>
-      <mat-label>Filtrar por CUI</mat-label>
-      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Ej. 1234..." #inputCui>
+      <mat-label>Buscar por CUI</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" (input)="validarSoloNumeros($event)" (keypress)="soloNumeros($event)" placeholder="Ej. 1234..." #inputCui>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Estado</mat-label>
+      <mat-label>Filtrar por Estado</mat-label>
       <mat-select (selectionChange)="filtrarPorEstado($event.value)" [(value)]="estadoSeleccionado">
         <mat-option *ngFor="let est of listaEstados" [value]="est.nombre">
           {{est.nombre}}

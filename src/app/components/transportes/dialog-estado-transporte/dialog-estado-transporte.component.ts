@@ -88,7 +88,7 @@ export class DialogEstadoTransporteComponent implements OnInit {
       Swal.fire({
         icon: 'info',
         title: 'Sin cambios',
-        text: `El transporte ya se encuentra en estado "${nombreNuevoEstado}"`,
+        text: `El transporte ya se encuentra "${nombreNuevoEstado}"`,
         confirmButtonColor: '#2c3e50',
         confirmButtonText: 'Ok'
       });

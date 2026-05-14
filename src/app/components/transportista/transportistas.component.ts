@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon'; // 1. IMPORTANTE: Agrega
 // 2. Ajuste de ruta (verificar si son 2 o 3 niveles de puntos)
 import { TransportistaService } from '../../services/transportista.service';
 import { DialogEstadoTransportistaComponent } from './dialog-estado-transportista/dialog-estado-transportista.component';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-transportistas',
@@ -125,48 +127,52 @@ ejecutarFiltro(): void {
   abrirDialogoEstado(element: any): void {
     const dialogRef = this.dialog.open(DialogEstadoTransportistaComponent, {
       width: '90%',
-            maxWidth: '700px',
+      maxWidth: '700px',
       data: {
-        idtransportista: element.idtransportista,
-        cui: element.cui,
-        estado: element.estado,
-        observaciones: element.observaciones
+        ...element,
+        estadoOriginal: element.nombreEstado // Asumiendo que viene del objeto element
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
       if (result) {
-
-        this.transportistaService
-          .actualizarEstadoSincronizado(result)
-          .subscribe({
-
-            next: (res: any) => {
-
-              console.log("Estado actualizado", res);
-
-              alert("Estado actualizado correctamente");
-
-              this.cargarTransportistas();
-
-            },
-
-            error: (err: any) => {
-
-              console.error("Error actualizando estado", err);
-
-              alert(
-                err?.error ||
-                "Error al actualizar estado"
-              );
-
-            }
-
-          });
-
+        this.transportistaService.actualizarEstadoSincronizado(result).subscribe({
+          next: () => {
+            Swal.close();
+            Swal.fire({
+              icon: 'success',
+              title: 'Se actualizó con éxito.',
+              text: 'El estado del transportista se actualizó con éxito',
+              confirmButtonColor: '#2c3e50'
+            }).then(() => this.cargarTransportistas());
+          },
+          error: (err: any) => {
+            Swal.close();
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: err?.error || "No se pudo actualizar el estado.",
+              confirmButtonColor: '#2c3e50'
+            });
+          }
+        });
       }
-
     });
+  }
+
+  soloNumeros(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
+  validarSoloNumeros(event: any): void {
+    const input = event.target as HTMLInputElement;
+    // Elimina cualquier cosa que no sea número si pegan texto
+    input.value = input.value.replace(/[^0-9]/g, '');
+    this.filtroCui = input.value;
+    this.ejecutarFiltro();
   }
 }
