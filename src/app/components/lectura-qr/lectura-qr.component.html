@@ -3,26 +3,29 @@
     <button mat-icon-button routerLink="/dashboard" class="back-btn">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h1>Escaneo de Documentos QR</h1>
+    <h1>Recepción de Producto - Beneficio</h1>
   </header>
 
-  <!-- Contenedor Principal Lado a Lado (Flex Layout) -->
   <div class="main-content-layout">
-
-    <!-- COLUMNA IZQUIERDA: TU DISEÑO ORIGINAL DEL ESCÁNER -->
+    <!-- COLUMNA IZQUIERDA: ESCÁNER -->
     <div class="scanner-column">
-      <!-- Mantenemos tu contenedor intacto -->
       <div class="scanner-container">
-        <!-- El escáner de la librería -->
         <zxing-scanner
-          *ngIf="scannerEnabled"
           (scanSuccess)="onCodeResult($event)"
-          [autofocusEnabled]="true"
-          [previewFitMode]="'cover'">
+          [formats]="allowedFormats">
         </zxing-scanner>
 
-        <!-- Marco visual sobre la cámara (Tu diseño original) -->
-        <div class="scanner-overlay">
+        <!-- Overlay de información -->
+        <div class="scanner-overlay" *ngIf="isPaused">
+          <div class="reading-msg">
+            <mat-icon>check_circle</mat-icon>
+            <span>QR LEÍDO</span>
+            <small>Reactivando en segundos...</small>
+          </div>
+        </div>
+
+        <!-- Tu target-box original solo se muestra si NO está pausado -->
+        <div class="scanner-overlay" *ngIf="!isPaused">
           <div class="target-box">
             <div class="corner top-left"></div>
             <div class="corner top-right"></div>
@@ -31,54 +34,79 @@
           </div>
         </div>
       </div>
-
-      <!-- Hint abajo del scanner, solo si no hay resultado -->
-      <div class="hint" *ngIf="!qrResultString">
-        <mat-icon>center_focus_weak</mat-icon>
-        <p>Coloque el código QR dentro del recuadro</p>
-      </div>
     </div>
 
-    <!-- COLUMNA DERECHA: PANEL DE INFORMACIÓN Y BOTONES -->
+    <!-- COLUMNA DERECHA: INFORMACIÓN ESTRUCTURADA -->
     <div class="info-column">
-
-      <!-- Se muestra solo cuando hay lectura exitosa -->
-      <mat-card class="result-card" *ngIf="qrResultString">
+      <mat-card class="result-card" *ngIf="datosParcialidad">
         <mat-card-content>
-          <div class="result-header">
-            <mat-icon>check_circle</mat-icon>
-            <span>Lectura Exitosa</span>
+
+          <!-- a. No. de Parcialidad -->
+          <div class="section-header">
+            <span class="label">No. de Parcialidad:</span>
+            <span class="value">{{ datosParcialidad.no_parcialidad }}</span>
           </div>
 
-          <div class="data-display">
-            <p class="data-label">Contenido del QR:</p>
-            <p class="qr-data">{{ qrResultString }}</p>
+          <mat-divider></mat-divider>
+
+          <!-- b. Transporte -->
+          <div class="data-section">
+            <h3>Transporte</h3>
+            <div class="indent">
+              <p><strong>Placa:</strong> {{ datosParcialidad.transporte_placa }}</p>
+              <p><strong>Estado:</strong> <span class="status-badge">{{ datosParcialidad.transporte_estado }}</span></p>
+              <p><strong>Observaciones:</strong> {{ datosParcialidad.transporte_observaciones || 'Sin observaciones' }}</p>
+            </div>
           </div>
 
-          <!-- SECCIÓN DE BOTONES INFERIORES -->
-          <div class="action-buttons">
-            <button mat-raised-button color="primary" class="action-btn" (click)="abrirTalanquera()">
-              <mat-icon>gate</mat-icon> Abrir Talanquera
-            </button>
-
-            <button mat-raised-button color="accent" class="action-btn" (click)="irParcialidad()">
-              <mat-icon>description</mat-icon> Ir a Parcialidad
-            </button>
-
-            <!-- Botón reintentar integrado abajo -->
-            <button mat-stroked-button color="warn" class="retry-btn" (click)="limpiarLectura()">
-              <mat-icon>refresh</mat-icon> Escanear de nuevo
-            </button>
+          <!-- c. Transportista -->
+          <div class="data-section">
+            <h3>Transportista</h3>
+            <div class="indent">
+              <p><strong>CUI:</strong> {{ datosParcialidad.transportista_cui }}</p>
+              <p><strong>Nombre:</strong> {{ datosParcialidad.transportista_nombre }}</p>
+              <p><strong>Estado:</strong> <span class="status-badge">{{ datosParcialidad.transportista_estado }}</span></p>
+              <p><strong>Observaciones:</strong> {{ datosParcialidad.transportista_observaciones || 'Sin observaciones' }}</p>
+            </div>
           </div>
+
+          <!-- ACCIONES -->
+          <!-- Dentro de tu info-column, donde están los botones -->
+          <div *ngIf="datosParcialidad">
+
+            <!-- SECCIÓN DE BOTONES: Solo si NO tiene fecha de recepción -->
+            <div class="action-buttons" *ngIf="!datosParcialidad.fecha_recepcion">
+              <div class="action-grid">
+                <button mat-raised-button color="primary" class="action-btn" (click)="procesarRecepcion('FA10')">
+                  <mat-icon>check</mat-icon> RECIBIR PARCIALIDAD
+                </button>
+                <button mat-raised-button color="warn" class="action-btn" (click)="procesarRecepcion('FA11')">
+                  <mat-icon>close</mat-icon> RECHAZAR PARCIALIDAD
+                </button>
+              </div>
+            </div>
+
+            <!-- MENSAJE INFORMATIVO: Si YA tiene fecha de recepción -->
+            <div class="already-processed" *ngIf="datosParcialidad.fecha_recepcion">
+              <mat-icon>info</mat-icon>
+              <p>Esta parcialidad ya fue recibida el: <strong>{{ datosParcialidad.fecha_recepcion | date:'dd/MM/yyyy HH:mm' }}</strong></p>
+              <p class="status-badge">REGISTRO COMPLETADO</p>
+            </div>
+
+          </div>
+
+          <button mat-flat-button class="btn-gate" (click)="abrirTalanquera()">
+            <mat-icon>bolt</mat-icon> Abrir Talanquera
+          </button>
+
+          <button mat-button class="btn-retry" (click)="limpiarLectura()">Escanear otro código</button>
         </mat-card-content>
       </mat-card>
 
-      <!-- Panel opcional cuando no hay lectura (puedes quitarlo si prefieres vacio) -->
-      <div class="waiting-panel" *ngIf="!qrResultString">
-        <mat-icon class="waiting-icon">qr_code_scanner</mat-icon>
-        <p>Esperando lectura...</p>
+      <div class="waiting-panel" *ngIf="!datosParcialidad">
+        <mat-icon class="waiting-icon">qr_code_2</mat-icon>
+        <p>Esperando lectura de QR...</p>
       </div>
     </div>
-
   </div>
 </div>
