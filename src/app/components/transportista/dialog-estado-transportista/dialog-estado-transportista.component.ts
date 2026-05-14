@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 
 // CORRECCIÓN DE RUTA: Subimos 3 niveles para llegar a la raíz de app y luego a services
 import { TransportistaService } from '../../../services/transportista.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-dialog-estado-transportista',
@@ -85,26 +87,29 @@ export class DialogEstadoTransportistaComponent implements OnInit {
   }
 
   actualizar(): void {
-
+    // 1. OBTENER EL ESTADO SELECCIONADO
     const estadoSeleccionado = this.listaEstados.find(
       (e: any) => e.id === this.data.estado
     );
 
-    const nombreNuevoEstado = estadoSeleccionado
-      ? estadoSeleccionado.nombre
-      : '';
+    const nombreNuevoEstado = estadoSeleccionado ? estadoSeleccionado.nombre : '';
 
-    // VALIDAR SI ES EL MISMO
+    // 2. VALIDACIÓN VISUAL: SI ES EL MISMO ESTADO (Comparación segura)
     if (
       nombreNuevoEstado?.trim().toLowerCase() ===
       this.data.estadoOriginal?.trim().toLowerCase()
     ) {
-
-      alert(`El transportista ya tiene estado "${nombreNuevoEstado}"`);
-
+      Swal.fire({
+        icon: 'info',
+        title: 'Sin cambios',
+        text: `El transportista ya se encuentra "${nombreNuevoEstado}"`,
+        confirmButtonColor: '#2c3e50',
+        confirmButtonText: 'Ok'
+      });
       return;
     }
 
+    // 3. PREPARAR PAYLOAD
     const payloadUpdate = {
       idtransportista: this.data.idtransportista,
       cui: this.data.cui,
@@ -113,6 +118,17 @@ export class DialogEstadoTransportistaComponent implements OnInit {
       observaciones: this.data.observaciones
     };
 
+    // 4. MENSAJE DE CARGA (LOADING)
+    Swal.fire({
+      title: 'Procesando...',
+      text: 'Sincronizando con los servicios centrales',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // 5. CERRAR DIÁLOGO Y ENVIAR DATOS AL PADRE
     this.dialogRef.close(payloadUpdate);
   }
 

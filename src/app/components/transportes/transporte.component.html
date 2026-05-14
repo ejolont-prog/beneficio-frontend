@@ -11,8 +11,11 @@
   <mat-card class="filter-card">
     <div class="filter-container">
       <mat-form-field appearance="outline" class="flex-grow-1" style="min-width: 300px;">
-        <mat-label>Filtrar por Placa</mat-label>
-        <input matInput (keyup)="aplicarFiltroPlaca($event)" placeholder="Ej. P123ABC" #inputPlaca>
+        <mat-label>Buscar por Placa</mat-label>
+        <input matInput (keyup)="aplicarFiltroPlaca($event)" #inputPlaca placeholder="Ej. 000AAA"
+               pattern="[A-Za-z0-9]*"
+               (input)="validarInputPlaca($event)"
+               (keyup)="aplicarFiltroPlaca($event)">
         <mat-icon matSuffix style="color: var(--melon-text)">search</mat-icon>
       </mat-form-field>
 
