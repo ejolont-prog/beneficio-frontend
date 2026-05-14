@@ -8,6 +8,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { TransportistaService } from '../../../services/transportista.service'; // Ajusta la ruta si es necesario
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-dialog-estado-transporte',
@@ -74,25 +76,26 @@ export class DialogEstadoTransporteComponent implements OnInit {
   }
 
   actualizar(): void {
-
-    // OBTENER EL ESTADO SELECCIONADO
+    // 1. OBTENER EL ESTADO SELECCIONADO
     const estadoSeleccionado = this.listaEstados.find(
       e => e.id === this.data.estado
     );
 
-    const nombreNuevoEstado = estadoSeleccionado
-      ? estadoSeleccionado.nombre
-      : '';
+    const nombreNuevoEstado = estadoSeleccionado ? estadoSeleccionado.nombre : '';
 
-    // VALIDAR SI ES EL MISMO ESTADO
+    // 2. VALIDACIÓN VISUAL: SI ES EL MISMO ESTADO
     if (nombreNuevoEstado === this.data.estadoOriginal) {
-
-      alert(`El transporte ya tiene estado "${nombreNuevoEstado}"`);
-
+      Swal.fire({
+        icon: 'info',
+        title: 'Sin cambios',
+        text: `El transporte ya se encuentra en estado "${nombreNuevoEstado}"`,
+        confirmButtonColor: '#2c3e50',
+        confirmButtonText: 'Ok'
+      });
       return;
     }
 
-    // PREPARAR PAYLOAD
+    // 3. PREPARAR PAYLOAD
     const payloadUpdate = {
       idtransporte: this.data.idtransporte,
       placa: this.data.placa,
@@ -101,8 +104,15 @@ export class DialogEstadoTransporteComponent implements OnInit {
       observaciones: this.data.observaciones
     };
 
-    // ENVIAR AL COMPONENTE PADRE
-    this.dialogRef.close(payloadUpdate);
+    Swal.fire({
+        title: 'Procesando...',
+        text: 'Sincronizando con los servicios centrales',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      this.dialogRef.close(payloadUpdate);
+
   }
 
 }

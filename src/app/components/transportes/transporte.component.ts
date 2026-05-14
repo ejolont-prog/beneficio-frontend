@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TransporteService } from '../../services/transporte.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-transporte',
@@ -92,8 +93,9 @@ export class TransporteComponent implements OnInit {
  }
 
   aplicarFiltroPlaca(event: Event) {
-    this.filtroPlaca = (event.target as HTMLInputElement).value;
-    this.ejecutarFiltro();
+    const valor = (event.target as HTMLInputElement).value;
+      this.filtroPlaca = valor.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      this.ejecutarFiltro();
   }
 
   aplicarFiltroEstado(valor: string) {
@@ -119,28 +121,71 @@ export class TransporteComponent implements OnInit {
     return estado === 'Activo' ? 'bg-success text-white' : 'bg-danger text-white';
   }
 
+  validarInputPlaca(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    // Elimina todo lo que NO sea letra o número
+    input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+
+    // Opcional: convertir a mayúsculas automáticamente
+    input.value = input.value.toUpperCase();
+
+    this.filtroPlaca = input.value;
+  }
+
   cambiarEstado(element: any) {
     const dialogRef = this.dialog.open(DialogEstadoTransporteComponent, {
       width: '90%',
       maxWidth: '700px',
-      data: { ...element } // Pasamos una copia para no alterar la tabla antes de tiempo
+      data: {
+        ...element,
+        estadoOriginal: element.nombreEstado // Para la validación de "Sin cambios"
+      }
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-          if (result) {
-            // Llamamos al servicio de transporte que acabamos de arreglar
-            this.transporteService.actualizarEstadoSincronizado(result).subscribe({
-              next: () => {
-                alert('Sincronización exitosa');
-                this.cargarDatos(); // Recarga la tabla para ver el cambio
-              },
-              // CORRECCIÓN AQUÍ: Añadimos ": any" al parámetro err
-              error: (err: any) => {
-                console.error("Error 403 o de conexión:", err);
-                alert("Error al sincronizar: " + (err.error?.message || "No se pudo conectar con el servidor"));
-              }
+      if (result) {
+        // El loading ya se inició en el diálogo, aquí procesamos la respuesta
+        this.transporteService.actualizarEstadoSincronizado(result).subscribe({
+          next: () => {
+            // 1. Cerramos el loading de "Procesando"
+            Swal.close();
+
+            // 2. Mensaje de éxito
+            Swal.fire({
+              icon: 'success',
+              title: 'Se actualizó con éxito.',
+              text: 'El estado del transporte se actualizó con éxito',
+              confirmButtonColor: '#2c3e50',
+              confirmButtonText: 'Ok'
+            }).then(() => {
+              this.cargarDatos(); // Recarga la tabla para ver el cambio
+            });
+          },
+          error: (err: any) => {
+            // 1. Cerramos el loading
+            Swal.close();
+
+            console.error("Error en la actualización:", err);
+
+            // 2. Manejo de mensaje de error dinámico
+            let mensajeError = "No se pudo conectar con el servidor o el acceso fue denegado (403).";
+            if (err.error && typeof err.error === 'string') {
+              mensajeError = err.error;
+            } else if (err.error?.message) {
+              mensajeError = err.error.message;
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al sincronizar',
+              text: mensajeError,
+              confirmButtonColor: '#2c3e50',
+              confirmButtonText: 'Ok'
             });
           }
         });
+      }
+    });
   }
 }
