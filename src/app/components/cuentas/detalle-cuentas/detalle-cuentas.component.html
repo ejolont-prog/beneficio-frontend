@@ -26,8 +26,9 @@
           <th>CUI Piloto</th>
           <th>Peso Estimado</th>
           <th>Peso Recibido</th>
-          <th>Fecha Registro</th>
-          <th>Estado</th>
+
+
+          <th>Estado Pesaje</th> <!-- 1. Agregamos el encabezado -->
           <th>Acciones</th>
         </tr>
         </thead>
@@ -38,24 +39,28 @@
           <td>{{ envio.cuitransportista }}</td>
           <td class="fw-bold text-primary">{{ envio.pesoestimado | number }}</td>
           <td class="fw-bold" [ngClass]="envio.pesorecibido ? 'text-success' : 'text-muted'">
-            {{ envio.pesorecibido ? (envio.pesorecibido | number) : 'Pendiente' }}
+          {{ envio.pesorecibido ? (envio.pesorecibido | number) : 'Pendiente' }}
           </td>
-          <td>{{ envio.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+
+
+          <!-- 2. Mostramos el String que viene de la tabla catálogos -->
           <td>
-              <span [class]="envio.estado === 1 ? 'status-badge-pending' : 'status-badge-active'">
-                {{ envio.estado === 1 ? 'En Camino' : 'Recibido' }}
-              </span>
+            <span class="badge-pesaje">
+              {{ envio.detallecatalogo ? envio.detallecatalogo : 'Sin registrar' }}
+            </span>
           </td>
+
           <td>
             <button class="btn detail-btn" *ngIf="!envio.pesorecibido">
-              Pesar
+              Cambiar estado
             </button>
             <mat-icon *ngIf="envio.pesorecibido" color="primary">check_circle</mat-icon>
           </td>
         </tr>
 
+        <!-- Ajustamos el colspan a 9 porque agregamos una columna -->
         <tr *ngIf="listadoEnvios.length === 0">
-          <td colspan="8" class="empty-row-cell">
+          <td colspan="9" class="empty-row-cell">
             <div class="empty-state-wrapper">
               <mat-icon>local_shipping</mat-icon>
               <h3 class="empty-title">Sin envíos registrados</h3>

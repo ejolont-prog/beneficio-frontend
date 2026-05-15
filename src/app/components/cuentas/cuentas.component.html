@@ -67,10 +67,8 @@
           </ng-container>
 
           <ng-container matColumnDef="parcialidades">
-            <th mat-header-cell *matHeaderCellDef class="text-center"> Envíos </th>
-            <td mat-cell *matCellDef="let element" class="text-center">
-              <span class="status-badge-neutral">{{element.cantParcialidades}}</span>
-            </td>
+            <th mat-header-cell *matHeaderCellDef> Cantidad Envíos </th>
+            <td mat-cell *matCellDef="let element"> {{element.cantParcialidades}} </td>
           </ng-container>
 
           <ng-container matColumnDef="fecha">
@@ -79,16 +77,19 @@
           </ng-container>
 
           <ng-container matColumnDef="estado">
-            <th mat-header-cell *matHeaderCellDef> Estado </th>
-            <td mat-cell *matCellDef="let element">
-              <button mat-button [matMenuTriggerFor]="menuEstado" class="status-badge-active">
-                {{element.estadoNombre}} <mat-icon>arrow_drop_down</mat-icon>
-              </button>
-              <mat-menu #menuEstado="matMenu">
-                <button mat-menu-item *ngFor="let est of listaEstados" (click)="cambiarEstado(element, est)">
-                  {{est}}
-                </button>
-              </mat-menu>
+            <th mat-header-cell *matHeaderCellDef class="text-center"> Estado </th>
+            <td mat-cell *matCellDef="let element" class="text-center">
+    <span class="badge-estado" [ngClass]="{
+      'estado-sin-cuenta': element.estadoNombre === 'Sin cuenta creada',
+      'estado-creada':     element.estadoNombre === 'Cuenta creada',
+      'estado-abierta':    element.estadoNombre === 'Cuenta abierta',
+      'estado-iniciado':   element.estadoNombre === 'Pesaje iniciado',
+      'estado-finalizado': element.estadoNombre === 'Pesaje finalizado',
+      'estado-cerrada':    element.estadoNombre === 'Cuenta cerrada',
+      'estado-confirmada': element.estadoNombre === 'Cuenta confirmada'
+    }">
+      {{ element.estadoNombre }}
+    </span>
             </td>
           </ng-container>
 
