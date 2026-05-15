@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core'; // <--- MODIFICADO
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,13 +6,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon'; // 1. IMPORTANTE: Agregar esto
+import { MatIconModule } from '@angular/material/icon';
 
-// 2. Ajuste de ruta (verificar si son 2 o 3 niveles de puntos)
 import { TransportistaService } from '../../services/transportista.service';
 import { DialogEstadoTransportistaComponent } from './dialog-estado-transportista/dialog-estado-transportista.component';
 import Swal from 'sweetalert2';
 
+// Websockets
+import SockJS from 'sockjs-client';
+import * as Stomp from 'stompjs';
 
 @Component({
   selector: 'app-transportistas',
@@ -25,13 +27,12 @@ import Swal from 'sweetalert2';
     MatSelectModule,
     MatButtonModule,
     MatDialogModule,
-    MatIconModule // 3. IMPORTANTE: Agregar esto aquí
+    MatIconModule
   ],
   templateUrl: './transportistas.component.html',
   styleUrls: ['./transportistas.component.css'],
-
 })
-export class TransportistasComponent implements OnInit {
+export class TransportistasComponent implements OnInit, OnDestroy { // <--- MODIFICADO
 
   public columnas: string[] = ['agricultor', 'cui', 'nombrecompleto', 'estado', 'observaciones', 'acciones'];
 
@@ -39,9 +40,10 @@ export class TransportistasComponent implements OnInit {
   public listaEstados: any[] = [];
   public estadoSeleccionado: string = '';
 
-  // 4. Definir el tipo explícitamente para evitar el error 'unknown'
   private transportistaService: TransportistaService = inject(TransportistaService);
   private dialog = inject(MatDialog);
+  private stompClient: any; // <--- AÑADIDO
+
   filtroCui: string = '';
   filtroEstado: string = '';
 
@@ -49,25 +51,55 @@ export class TransportistasComponent implements OnInit {
     this.configurarFiltroPersonalizado();
     this.cargarTransportistas();
     this.cargarEstados();
+    this.conectarWebSocket(); // <--- AÑADIDO
+  }
+
+  ngOnDestroy(): void {
+    // <--- AÑADIDO
+    if (this.stompClient) {
+      this.stompClient.disconnect();
+    }
+  }
+
+  conectarWebSocket(): void {
+    // <--- AÑADIDO
+    const socket = new SockJS('http://localhost:8083/ws-beneficio');
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = () => {};
+
+    this.stompClient.connect({}, (frame: any) => {
+      console.log('✅ Transportistas conectado a WebSockets');
+
+      this.stompClient.subscribe('/topic/actualizacion-transportista-beneficio', (notificacion: any) => {
+        const respuesta = JSON.parse(notificacion.body);
+        const data = [...this.dataSource.data];
+
+        // Buscamos por idtransportista
+        const index = data.findIndex(t => t.idtransportista === respuesta.idtransportista);
+
+        if (index !== -1) {
+          data[index].estado = respuesta.estado || data[index].estado;
+          data[index].observaciones = respuesta.observaciones || data[index].observaciones;
+          this.dataSource.data = data;
+        } else {
+          this.cargarTransportistas(); // Recargar si es nuevo
+        }
+      });
+    }, (error: any) => {
+      console.error('Error WS Transportistas:', error);
+      setTimeout(() => this.conectarWebSocket(), 5000);
+    });
   }
 
   configurarFiltroPersonalizado() {
-
     this.dataSource.filterPredicate = (data: any, filter: string) => {
-
       const searchTerms = JSON.parse(filter);
-
       const cuiMatch = data.cui
         ?.toLowerCase()
         .includes((searchTerms.cui || '').toLowerCase());
-
-      const estadoMatch = searchTerms.estado
-        ? data.estado === searchTerms.estado
-        : true;
-
+      const estadoMatch = searchTerms.estado ? data.estado === searchTerms.estado : true;
       return cuiMatch && estadoMatch;
     };
-
   }
 
   cargarTransportistas(): void {
@@ -89,39 +121,27 @@ export class TransportistasComponent implements OnInit {
   }
 
   aplicarFiltro(event: Event): void {
-
     this.filtroCui = (event.target as HTMLInputElement).value;
-
     this.ejecutarFiltro();
   }
 
   filtrarPorEstado(estado: string): void {
-
     this.filtroEstado = estado;
-
     this.ejecutarFiltro();
   }
 
-ejecutarFiltro(): void {
-
-  this.dataSource.filter = JSON.stringify({
-    cui: this.filtroCui,
-    estado: this.filtroEstado
-  });
-
-}
+  ejecutarFiltro(): void {
+    this.dataSource.filter = JSON.stringify({
+      cui: this.filtroCui,
+      estado: this.filtroEstado
+    });
+  }
 
   limpiarFiltros(): void {
-
     this.filtroCui = '';
     this.filtroEstado = '';
     this.estadoSeleccionado = '';
-
-    this.dataSource.filter = JSON.stringify({
-      cui: '',
-      estado: ''
-    });
-
+    this.dataSource.filter = JSON.stringify({ cui: '', estado: '' });
   }
 
   abrirDialogoEstado(element: any): void {
@@ -130,7 +150,7 @@ ejecutarFiltro(): void {
       maxWidth: '700px',
       data: {
         ...element,
-        estadoOriginal: element.nombreEstado // Asumiendo que viene del objeto element
+        estadoOriginal: element.nombreEstado
       }
     });
 
@@ -144,7 +164,7 @@ ejecutarFiltro(): void {
               title: 'Se actualizó con éxito.',
               text: 'El estado del transportista se actualizó con éxito',
               confirmButtonColor: '#2c3e50'
-            }).then(() => this.cargarTransportistas());
+            }); // Ya no es obligatorio cargarTransportistas() aquí pues el WS lo hará
           },
           error: (err: any) => {
             Swal.close();
@@ -170,7 +190,6 @@ ejecutarFiltro(): void {
 
   validarSoloNumeros(event: any): void {
     const input = event.target as HTMLInputElement;
-    // Elimina cualquier cosa que no sea número si pegan texto
     input.value = input.value.replace(/[^0-9]/g, '');
     this.filtroCui = input.value;
     this.ejecutarFiltro();
