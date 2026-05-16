@@ -5,13 +5,18 @@ import { Observable } from 'rxjs';
 export interface CuentaDetalle {
   idCuenta: number;
   noCuenta: string;
+  nitAgricultor?: string;       //
   razonSocial: string;
   pesoTotal: number;
+  pesoTotalEsperado?: number;   //
+  pesoTotalRecibido?: number;   //
+  diferenciaTotal?: number;     //  Agregado
+  tolerancia?: number;           //  Agregado
+  resultadoTolerancia?: string; //  Agregado
   cantParcialidades: number;
   fechaEnvio: string;
   estadoNombre: string;
 }
-
 // Nueva interfaz para recibir el catálogo limpio del Backend
 export interface EstadoCatalogo {
   id: number;
@@ -51,5 +56,9 @@ export class CuentasService {
   // =========================================================================
   getEstadosCatalogo(): Observable<EstadoCatalogo[]> {
     return this.http.get<EstadoCatalogo[]>(`${this.apiUrl}/cuentas/estados-catalogo`);
+  }
+  getResumenCuentaBackend(noCuenta: string): Observable<any> {
+    // Apunta al nuevo endpoint público que no requiere pasar por el filtro estricto
+    return this.http.get(`${this.apiUrl}/cuentas/publico/resumen-ojito/${noCuenta}`);
   }
 }

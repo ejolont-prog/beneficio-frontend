@@ -18,7 +18,11 @@ export class DetalleCuentaService {
     return this.http.get<any[]>(`${this.URL}/listar/${nocuenta}`);
   }
 
-
+  listarCatalogosPorId(idCatalogo: number): Observable<any[]> {
+    // ✅ CORREGIDO: Ahora apunta a http://localhost:8082/api/beneficio/catalogos/3
+    // Esta ruta ya está permitida en tu JwtFilter mediante: path.startsWith("/api/beneficio/")
+    return this.http.get<any[]>(`${this.URL}/catalogos/${idCatalogo}`);
+  }
   validarRecepcionEnvio(idDetalle: number, placa: string, cui: string): Observable<any> {
     return this.http.put<any>(`${this.URL}/validar-recepcion/${idDetalle}?placa=${placa}&cui=${cui}`, {});
   }

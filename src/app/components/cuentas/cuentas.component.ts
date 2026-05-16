@@ -138,6 +138,9 @@ export class CuentasComponent implements OnInit {
   fechaInicio: Date | null = null;
   fechaFin: Date | null = null;
 
+  // Variables para el control de la modal de resumen por medio de "el ojito"
+  cuentaSeleccionada: any = null;
+
   // CORRECCIÓN CENTRAL: Estas listas se llenarán de forma dinámica desde la Base de Datos
   listaEstadosFiltro: string[] = [];
   listaEstadosCatalogo: EstadoCatalogo[] = [];
@@ -151,6 +154,32 @@ export class CuentasComponent implements OnInit {
   ngOnInit(): void {
     this.cargarEstadosYComponente();
     this.configurarPredicadoFiltro();
+  }
+  /**
+   * Abre la modal consumiendo el nuevo endpoint independiente
+   */
+  abrirModalResumen(templateRef: any, element: any): void {
+    this.cargando = true;
+
+    this.cuentasService.getResumenCuentaBackend(element.noCuenta).subscribe({
+      next: (datosCompletos) => {
+        this.cuentaSeleccionada = datosCompletos;
+        this.cargando = false;
+
+        this.dialog.open(templateRef, {
+          width: '420px',
+          maxHeight: '90vh',
+          disableClose: false
+        });
+      },
+      error: (err) => {
+        this.cargando = false;
+        console.error('Error al obtener el resumen:', err);
+        this.snackBar.open('No se pudieron recuperar las tolerancias.', 'Cerrar', {
+          duration: 4000
+        });
+      }
+    });
   }
 
   /**
