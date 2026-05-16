@@ -32,6 +32,8 @@
   line-height: 32px;
 }
 
+
+
 .status-badge-active mat-icon {
   font-size: 18px;
   width: 18px;
@@ -180,3 +182,59 @@
 }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
+
+/* --- BADGES DINÁMICOS POR ESTADO --- */
+.badge-estado {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  min-width: 130px;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* 1. Sin cuenta creada (Gris Neutro) */
+.estado-sin-cuenta {
+  background-color: #e0e0e0 !important;
+  color: #616161 !important;
+}
+
+/* 2. Cuenta creada (Azul Info) */
+.estado-creada {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+}
+
+/* 3. Cuenta abierta (Melón / Tu paleta) */
+.estado-abierta {
+  background-color: var(--melon-bg) !important;
+  color: var(--coffee-dark) !important;
+}
+
+/* 4. Pesaje iniciado (Naranja / Alerta) */
+.estado-iniciado {
+  background-color: #fff3e0 !important;
+  color: #ef6c00 !important;
+}
+
+/* 5. Pesaje finalizado (Verde Suave) */
+.estado-finalizado {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+/* 6. Cuenta cerrada (Rojo/Gris oscuro) */
+.estado-cerrada {
+  background-color: #fce4ec !important;
+  color: #c2185b !important;
+}
+
+/* 7. Cuenta confirmada (Dorado / Éxito Total) */
+.estado-confirmada {
+  background-color: #fff9c4 !important;
+  color: #fbc02d !important;
+  border: 1px solid #fbc02d;
+}
