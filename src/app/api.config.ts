@@ -4,6 +4,7 @@
 
 export const FRONTEND_LOGIN_URL = 'http://localhost:4300/Login';
 export const API_BASE_URL = 'http://localhost:8081/api';
+export const API_BENEFICIO  = 'http://localhost:8083/api';
 export const REDIRECT_URLS = {
   agricultor: 'http://localhost:4201',
   pesocabal: 'http://localhost:4202',

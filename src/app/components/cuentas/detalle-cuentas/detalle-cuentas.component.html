@@ -26,10 +26,8 @@
           <th>CUI Piloto</th>
           <th>Peso Estimado</th>
           <th>Peso Recibido</th>
-
-
-          <th>Estado Pesaje</th> <!-- 1. Agregamos el encabezado -->
-          <th>Acciones</th>
+          <th class="text-center">Estado Pesaje</th>
+          <th class="text-center">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -37,30 +35,45 @@
           <td class="fw-bold">{{ envio.noparcialidad }}</td>
           <td><span class="badge-placa">{{ envio.placa }}</span></td>
           <td>{{ envio.cuitransportista }}</td>
-          <td class="fw-bold text-primary">{{ envio.pesoestimado | number }}</td>
+          <td class="fw-bold text-primary">{{ envio.pesoestimado | number:'1.0-2' }}</td>
           <td class="fw-bold" [ngClass]="envio.pesorecibido ? 'text-success' : 'text-muted'">
-          {{ envio.pesorecibido ? (envio.pesorecibido | number) : 'Pendiente' }}
+            {{ envio.pesorecibido ? (envio.pesorecibido | number:'1.0-2') : 'Pendiente' }}
           </td>
 
-
-          <!-- 2. Mostramos el String que viene de la tabla catálogos -->
-          <td>
-            <span class="badge-pesaje">
+          <td class="text-center">
+            <span class="badge-estado" [ngClass]="{
+              'estado-sin-cuenta': !envio.detallecatalogo,
+              'estado-confirmada': envio.detallecatalogo?.toLowerCase()?.includes('confirmar') || envio.detallecatalogo?.toLowerCase()?.includes('recepcion'),
+              'estado-cerrada':    envio.detallecatalogo?.toLowerCase()?.includes('rechazado') || envio.detallecatalogo?.toLowerCase()?.includes('rechazada'),
+              'estado-abierta':     envio.detallecatalogo && !envio.detallecatalogo?.toLowerCase()?.includes('confirmar') && !envio.detallecatalogo?.toLowerCase()?.includes('rechaza')
+            }">
               {{ envio.detallecatalogo ? envio.detallecatalogo : 'Sin registrar' }}
             </span>
           </td>
 
-          <td>
-            <button class="btn detail-btn" *ngIf="!envio.pesorecibido">
-              Cambiar estado
-            </button>
-            <mat-icon *ngIf="envio.pesorecibido" color="primary">check_circle</mat-icon>
+          <td class="text-center">
+            <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+
+              <button
+                class="btn detail-btn"
+                *ngIf="!envio.pesorecibido && !envio.detallecatalogo?.toLowerCase()?.includes('confirmar') && !envio.detallecatalogo?.toLowerCase()?.includes('rechaza')"
+                (click)="ejecutarVerificacion(envio)">
+                Validar Recepción
+              </button>
+
+              <mat-icon *ngIf="envio.pesorecibido || envio.detallecatalogo?.toLowerCase()?.includes('confirmar')" style="color: #2e7d32;">
+                check_circle
+              </mat-icon>
+
+              <mat-icon *ngIf="envio.detallecatalogo?.toLowerCase()?.includes('rechaza')" style="color: #c62828;">
+                cancel
+              </mat-icon>
+            </div>
           </td>
         </tr>
 
-        <!-- Ajustamos el colspan a 9 porque agregamos una columna -->
         <tr *ngIf="listadoEnvios.length === 0">
-          <td colspan="9" class="empty-row-cell">
+          <td colspan="7" class="empty-row-cell">
             <div class="empty-state-wrapper">
               <mat-icon>local_shipping</mat-icon>
               <h3 class="empty-title">Sin envíos registrados</h3>
